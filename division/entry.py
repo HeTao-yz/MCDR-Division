@@ -972,36 +972,37 @@ def check_msg(source: CommandSource, mode: str = None, tell_player: str = None):
         if mode == 'time':
             msgs.sort(key=lambda elem: elem[1].time)
 
-        print_message(source, tr('msg.text'), tell_player=tell_player)
+        if len(msgs) > 0:
+            print_message(source, tr('msg.text'), tell_player=tell_player)
 
-        for name, msg, count in msgs:
-            if name == player_id:
-                disp_name = player_RText(player_id, '[{}] ')
-            else:
-                disp_name = group_RText(name, '[{}] ')
+            for name, msg, count in msgs:
+                if name == player_id:
+                    disp_name = player_RText(player_id, '[{}] ')
+                else:
+                    disp_name = group_RText(name, '[{}] ')
 
-            print_message(
-                source,
+                print_message(
+                    source,
 
-                RText('[×] ', color=RColor.red).
-                h(tr('msg.delete')).
-                c(RAction.run_command, f'{PREFIX} del {name} {count}') +
+                    RText('[×] ', color=RColor.red).
+                    h(tr('msg.delete')).
+                    c(RAction.run_command, f'{PREFIX} del {name} {count}') +
 
-                disp_name +
+                    disp_name +
 
-                RText(f'[{disp_time(source, msg.time, tz)}] ', color=RColor.gray).
-                h(format_time(source, msg.time, tz)) +
+                    RText(f'[{disp_time(source, msg.time, tz)}] ', color=RColor.gray).
+                    h(format_time(source, msg.time, tz)) +
 
-                player_RText(msg.sender, '<{}> ') +
+                    player_RText(msg.sender, '<{}> ') +
 
-                url_tr(msg.text).
-                h(tr('msg.edit')).
-                c(RAction.suggest_command, f'{PREFIX} edit {name} {count} {msg.text}'),
+                    url_tr(msg.text).
+                    h(tr('msg.edit')).
+                    c(RAction.suggest_command, f'{PREFIX} edit {name} {count} {msg.text}'),
 
-                tell_player=tell_player
-            )
+                    tell_player=tell_player
+                )
 
-        print_message(source, tr('msg.count', len(msgs)), tell_player=tell_player)
+            print_message(source, tr('msg.count', len(msgs)), tell_player=tell_player)
 
     else:
         print_unknown(source, player_id, 'player')
